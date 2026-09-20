@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>Privacy notice | The AI Fluent Nurse</title>
+<meta name="description" content="How The AI Fluent Nurse handles the information you share when you join the waitlist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdfbff;
+  --hero: #efe7fb;
+  --soft: #f6f1fd;
+  --panel: #ffffff;
+  --ink: #2b1d4d;
+  --muted: #5a4c78;
+  --line: #dcd0f0;
+  --primary: #6d3fc0;
+  --primary-hover: #5a31a3;
+  --lilac: #b79ce2;
+  --on-primary: #ffffff;
+  --band: #3d2478;
+  --on-band: #f8f4ff;
+  --on-band-muted: #d3c5ee;
+  --alert: #c62828;
+  --alert-ink: #8f1d1d;
+  --alert-bg: #fdecea;
+  --alert-line: #f2b8b3;
+  --on-alert: #ffffff;
+  --good: #1b6e52;
+  --good-bg: #dcf0e8;
+  --on-good: #ffffff;
+  --focus: #2b1d4d;
+  --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
+  --body: "Public Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #150f24;
+    --hero: #241a3d;
+    --soft: #1c1430;
+    --panel: #1f1636;
+    --ink: #f1ebfc;
+    --muted: #b9aad6;
+    --line: #3a2c5c;
+    --primary: #b79ce2;
+    --primary-hover: #cbb6ee;
+    --lilac: #b79ce2;
+    --on-primary: #1a0f33;
+    --band: #3a2670;
+    --on-band: #f5efff;
+    --on-band-muted: #cdbfe8;
+    --alert: #ff8f86;
+    --alert-ink: #ffc1bb;
+    --alert-bg: #3d1b19;
+    --alert-line: #7a3833;
+    --on-alert: #3d1b19;
+    --good: #7fdcb4;
+    --good-bg: #12382c;
+    --on-good: #0c2b20;
+    --focus: #f1ebfc;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #150f24;
+  --hero: #241a3d;
+  --soft: #1c1430;
+  --panel: #1f1636;
+  --ink: #f1ebfc;
+  --muted: #b9aad6;
+  --line: #3a2c5c;
+  --primary: #b79ce2;
+  --primary-hover: #cbb6ee;
+  --lilac: #b79ce2;
+  --on-primary: #1a0f33;
+  --band: #3a2670;
+  --on-band: #f5efff;
+  --on-band-muted: #cdbfe8;
+  --alert: #ff8f86;
+  --alert-ink: #ffc1bb;
+  --alert-bg: #3d1b19;
+  --alert-line: #7a3833;
+  --on-alert: #3d1b19;
+  --good: #7fdcb4;
+  --good-bg: #12382c;
+  --on-good: #0c2b20;
+  --focus: #f1ebfc;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem; }
+
+h1, h2, h3 { font-family: var(--display); margin: 0; letter-spacing: -0.015em; }
+h1 { font-size: clamp(2.3rem, 5.2vw, 3.7rem); line-height: 1.04; font-weight: 800; letter-spacing: -0.025em; }
+h2 { font-size: clamp(1.65rem, 3.2vw, 2.25rem); line-height: 1.12; font-weight: 700; }
+h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 700; }
+p { margin: 0; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 3rem; padding: 0.75rem 1.6rem;
+  background: var(--primary); color: var(--on-primary);
+  font-family: var(--body); font-weight: 700; font-size: 1.0625rem;
+  text-decoration: none; border-radius: 10px;
+  transition: background-color 0.15s ease;
+}
+.btn:hover { background: var(--primary-hover); }
+.btn-sm { min-height: 2.6rem; padding: 0.5rem 1.15rem; font-size: 0.95rem; }
+.link { font-weight: 600; text-underline-offset: 4px; }
+
+/* Header */
+.top { background: var(--panel); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 0.9rem; padding-bottom: 0.9rem; }
+.brandwrap { display: flex; align-items: center; flex-wrap: wrap; gap: 0.15rem 1rem; }
+.brand { display: inline-flex; align-items: center; gap: 0.55rem; font-family: var(--display); font-weight: 800; font-size: 1.2rem; letter-spacing: -0.01em; text-decoration: none; }
+.mark { color: var(--primary); flex: none; }
+.tagline { color: var(--muted); font-size: 0.95rem; }
+.foot { padding: 2rem 0 2.5rem; font-size: 0.88rem; color: var(--muted); }
+.foot p { max-width: 46rem; }
+.foot p + p { margin-top: 0.4rem; }
+
+.doc { max-width: 44rem; margin: 0 auto; padding: 2.5rem 1.25rem 3rem; }
+.doc h1 { font-size: clamp(2rem, 4.5vw, 2.8rem); }
+.doc .updated { margin-top: 0.6rem; color: var(--muted); }
+.doc h2 { font-size: 1.4rem; margin-top: 2.2rem; }
+.doc p { margin-top: 0.8rem; }
+.doc ul { margin: 0.8rem 0 0; padding-left: 1.3rem; }
+.doc li { margin-top: 0.4rem; }
+.doc a { text-underline-offset: 3px; }
+.summary { background: var(--soft); border: 1px solid var(--line); border-radius: 14px; padding: 1.25rem 1.5rem 1.4rem; margin-top: 1.6rem; }
+.summary h2 { margin-top: 0; font-size: 1.2rem; }
+.todo { background: #fff3b0; color: #3b2f00; padding: 0 0.3rem; border-radius: 4px; font-weight: 700; }
+@media (max-width: 560px) { .tagline { display: none; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brandwrap">
+      <a class="brand" href="/">
+        <svg class="mark" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M1 10 H8 L11 3 L15 17 L18 7 L20 10 H29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        The AI Fluent Nurse
+      </a>
+      <span class="tagline">Get AI-ready, one shift at a time.</span>
+    </div>
+    <a class="btn btn-sm" href="/#waitlist">Join the waitlist</a>
+  </div>
+</header>
+
+<main class="doc">
+  <h1>Privacy notice</h1>
+  <p class="updated">Last updated: September 20, 2026</p>
+
+  <p>The AI Fluent Nurse is run by Kim, a licensed practical nurse. This page explains what information I collect when you use this site, what I do with it, and the choices you have.</p>
+
+  <div class="summary">
+    <h2>The short version</h2>
+    <ul>
+      <li>If you join the waitlist, I collect your name, your email, and anything you choose to tell me about your role and what you want help with.</li>
+      <li>I use it to email you about the course and to decide what to build.</li>
+      <li>I don't sell your information or use it for advertising.</li>
+      <li>You can ask me to delete it at any time.</li>
+      <li>Please never enter patient information anywhere on this site.</li>
+    </ul>
+  </div>
+
+  <h2>What I collect</h2>
+  <p>When you join the waitlist, you give me:</p>
+  <ul>
+    <li>Your first name, and your last name if you choose to share it</li>
+    <li>Your email address</li>
+    <li>Your role (LPN, CNA, RN, or other), if you choose one</li>
+    <li>Anything you type in the "What do you most want help with?" box</li>
+  </ul>
+  <p>Like most websites, the company that hosts this site may log basic technical details when you visit, such as your IP address and browser type. This site doesn't use advertising trackers, and I don't run analytics on it at this time. The page loads its fonts from Google Fonts, so Google may receive your IP address when the page loads.</p>
+
+  <h2>Please don't share patient information</h2>
+  <p>This site is not the place for patient details. Please don't put a patient's name, dates, room number, medical record number, or anything else that could identify a patient into the waitlist form or any message to me.</p>
+
+  <h2>How I use your information</h2>
+  <ul>
+    <li>To email you about the course, including when it opens and updates related to it</li>
+    <li>To understand what nurses want help with, so I can build the right lessons first</li>
+    <li>To reply if you contact me</li>
+  </ul>
+  <p>Every email I send about the course will include a way to unsubscribe.</p>
+
+  <h2>Who else sees it</h2>
+  <p>I don't sell your information or share it for advertising. Your information is stored with the services that run this site: Supabase, which hosts the database, and Vercel, which hosts the website. They handle it only to provide those services to me. I may also disclose information if the law requires it.</p>
+
+  <h2>How long I keep it</h2>
+  <p>I keep your waitlist information until you ask me to remove it, or until I no longer need the waitlist.</p>
+
+  <h2>Keeping it safe</h2>
+  <p>Your information travels over an encrypted connection and is stored in a database that only I can open. No online service can promise perfect security, but I take care to protect what you share.</p>
+
+  <h2>Your choices</h2>
+  <p>You can ask me to show you, correct, or delete the information I have about you, or to take you off the list, by emailing <span class="todo">[YOUR CONTACT EMAIL]</span>. You can also use the unsubscribe link in any email I send.</p>
+
+  <h2>Children</h2>
+  <p>This site is for working nurses and other adults. It isn't meant for children under 13, and I don't knowingly collect their information.</p>
+
+  <h2>Changes to this notice</h2>
+  <p>If I change how I handle information, for example when I add payments or student accounts, I'll update this page and the date at the top.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about this notice? Email <span class="todo">[YOUR CONTACT EMAIL]</span>.</p>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><a class="link" href="/">Back to home</a></p>
+    <p>For education only. Not medical, legal, or compliance advice. Always follow your employer's policies and your scope of practice.</p>
+  </div>
+</footer>
+
+</body>
+</html>
