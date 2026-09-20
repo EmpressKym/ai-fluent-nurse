@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>The AI Fluent Nurse | Get AI-ready, one shift at a time</title>
+<meta name="description" content="A practical AI course for LPNs, CNAs, and RNs. Save time on charting, handoffs, and patient education without risking your license or your patients' privacy.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fdfbff;
+  --hero: #efe7fb;
+  --soft: #f6f1fd;
+  --panel: #ffffff;
+  --ink: #2b1d4d;
+  --muted: #5a4c78;
+  --line: #dcd0f0;
+  --primary: #6d3fc0;
+  --primary-hover: #5a31a3;
+  --lilac: #b79ce2;
+  --on-primary: #ffffff;
+  --band: #3d2478;
+  --on-band: #f8f4ff;
+  --on-band-muted: #d3c5ee;
+  --alert: #c62828;
+  --alert-ink: #8f1d1d;
+  --alert-bg: #fdecea;
+  --alert-line: #f2b8b3;
+  --on-alert: #ffffff;
+  --good: #1b6e52;
+  --good-bg: #dcf0e8;
+  --on-good: #ffffff;
+  --focus: #2b1d4d;
+  --display: "Bricolage Grotesque", "Trebuchet MS", "Segoe UI", sans-serif;
+  --body: "Public Sans", "Segoe UI", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #150f24;
+    --hero: #241a3d;
+    --soft: #1c1430;
+    --panel: #1f1636;
+    --ink: #f1ebfc;
+    --muted: #b9aad6;
+    --line: #3a2c5c;
+    --primary: #b79ce2;
+    --primary-hover: #cbb6ee;
+    --lilac: #b79ce2;
+    --on-primary: #1a0f33;
+    --band: #3a2670;
+    --on-band: #f5efff;
+    --on-band-muted: #cdbfe8;
+    --alert: #ff8f86;
+    --alert-ink: #ffc1bb;
+    --alert-bg: #3d1b19;
+    --alert-line: #7a3833;
+    --on-alert: #3d1b19;
+    --good: #7fdcb4;
+    --good-bg: #12382c;
+    --on-good: #0c2b20;
+    --focus: #f1ebfc;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #150f24;
+  --hero: #241a3d;
+  --soft: #1c1430;
+  --panel: #1f1636;
+  --ink: #f1ebfc;
+  --muted: #b9aad6;
+  --line: #3a2c5c;
+  --primary: #b79ce2;
+  --primary-hover: #cbb6ee;
+  --lilac: #b79ce2;
+  --on-primary: #1a0f33;
+  --band: #3a2670;
+  --on-band: #f5efff;
+  --on-band-muted: #cdbfe8;
+  --alert: #ff8f86;
+  --alert-ink: #ffc1bb;
+  --alert-bg: #3d1b19;
+  --alert-line: #7a3833;
+  --on-alert: #3d1b19;
+  --good: #7fdcb4;
+  --good-bg: #12382c;
+  --on-good: #0c2b20;
+  --focus: #f1ebfc;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+
+.wrap { max-width: 1080px; margin: 0 auto; padding: 0 1.25rem; }
+
+h1, h2, h3 { font-family: var(--display); margin: 0; letter-spacing: -0.015em; }
+h1 { font-size: clamp(2.3rem, 5.2vw, 3.7rem); line-height: 1.04; font-weight: 800; letter-spacing: -0.025em; }
+h2 { font-size: clamp(1.65rem, 3.2vw, 2.25rem); line-height: 1.12; font-weight: 700; }
+h3 { font-size: 1.15rem; line-height: 1.25; font-weight: 700; }
+p { margin: 0; }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 3rem; padding: 0.75rem 1.6rem;
+  background: var(--primary); color: var(--on-primary);
+  font-family: var(--body); font-weight: 700; font-size: 1.0625rem;
+  text-decoration: none; border-radius: 10px;
+  transition: background-color 0.15s ease;
+}
+.btn:hover { background: var(--primary-hover); }
+.btn-sm { min-height: 2.6rem; padding: 0.5rem 1.15rem; font-size: 0.95rem; }
+.link { font-weight: 600; text-underline-offset: 4px; }
+
+/* Header */
+.top { background: var(--panel); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 0.9rem; padding-bottom: 0.9rem; }
+.brandwrap { display: flex; align-items: center; flex-wrap: wrap; gap: 0.15rem 1rem; }
+.brand { display: inline-flex; align-items: center; gap: 0.55rem; font-family: var(--display); font-weight: 800; font-size: 1.2rem; letter-spacing: -0.01em; text-decoration: none; }
+.mark { color: var(--primary); flex: none; }
+.tagline { color: var(--muted); font-size: 0.95rem; }
+
+/* Urgent safety bar */
+.alert-bar { background: var(--alert-bg); border-bottom: 1px solid var(--alert-line); color: var(--alert-ink); }
+.alert-bar .wrap { display: flex; align-items: center; gap: 0.7rem; padding-top: 0.7rem; padding-bottom: 0.7rem; font-size: 0.95rem; font-weight: 600; line-height: 1.4; }
+.alert-icon { flex: none; width: 22px; height: 22px; color: var(--alert); }
+.alert-icon .bang { stroke: var(--on-alert); }
+
+/* Hero */
+.hero-band { background: var(--hero); }
+.hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3.5rem; align-items: center; padding-top: 4.5rem; padding-bottom: 3.5rem; }
+.lede { margin-top: 1.4rem; font-size: 1.2rem; line-height: 1.55; color: var(--muted); max-width: 34rem; }
+.actions { margin-top: 2rem; display: flex; flex-wrap: wrap; align-items: center; gap: 1.5rem; }
+.fine { margin-top: 1rem; font-size: 0.9rem; color: var(--muted); }
+.pulse { display: block; width: 100%; height: 44px; color: var(--lilac); opacity: 0.95; }
+.pulse path { vector-effect: non-scaling-stroke; }
+
+/* Privacy checker */
+.checker { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 1.6rem; }
+.checker h2 { font-size: 1.4rem; }
+.chk-sub { margin-top: 0.4rem; color: var(--muted); font-size: 0.98rem; }
+.chips { margin-top: 1.1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  font-family: var(--body); font-size: 0.95rem; line-height: 1.3; text-align: left;
+  min-height: 2.75rem; padding: 0.5rem 0.9rem;
+  color: var(--ink); background: var(--soft);
+  border: 1px solid var(--line); border-radius: 12px; cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.chip:hover { border-color: var(--ink); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.verdict { margin-top: 1.1rem; min-height: 8rem; padding: 1rem 1.1rem; border: 1px dashed var(--line); border-radius: 12px; }
+.verdict.is-stop { background: var(--alert-bg); border: 1px solid var(--alert-line); }
+.verdict.is-ok { background: var(--good-bg); border: 1px solid transparent; }
+.verdict .empty { color: var(--muted); }
+.verdict p { margin-top: 0.6rem; }
+.verdict p:first-child { margin-top: 0; }
+.tag { display: inline-block; padding: 0.15rem 0.75rem; border-radius: 999px; font-weight: 700; font-size: 0.9rem; }
+.tag.stop { background: var(--alert); color: var(--on-alert); }
+.tag.ok { background: var(--good); color: var(--on-good); }
+.chk-foot { margin-top: 0.9rem; font-size: 0.88rem; color: var(--muted); }
+
+/* Sections */
+.section { padding: 3.75rem 0; }
+.section.soft { background: var(--soft); }
+.sec-head { max-width: 40rem; margin-bottom: 2rem; }
+.sec-head p { margin-top: 0.8rem; color: var(--muted); }
+
+.mods { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+.mods li { display: grid; grid-template-columns: 3rem 16rem 1fr; gap: 1rem; align-items: baseline; padding: 1.1rem 0; border-bottom: 1px solid var(--line); }
+.mods .n { font-family: var(--display); font-weight: 800; font-size: 1.5rem; color: var(--primary); }
+.mods p { color: var(--muted); max-width: 34rem; }
+.mods li.urgent .n, .mods li.urgent h3 { color: var(--alert); }
+
+.trio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+.trio > div { border-top: 3px solid var(--lilac); padding-top: 1rem; }
+.trio p { margin-top: 0.5rem; color: var(--muted); }
+.note { margin-top: 1.75rem; max-width: 40rem; font-weight: 600; }
+
+.limits-box { background: var(--alert-bg); border: 1px solid var(--alert-line); border-top: 5px solid var(--alert); border-radius: 14px; padding: 1.75rem; max-width: 46rem; }
+.limits-box h2 { color: var(--alert-ink); }
+.limits { margin: 1.1rem 0 0; padding-left: 1.2rem; }
+.limits li { margin-top: 0.7rem; }
+.limits li::marker { color: var(--alert); }
+
+.about { display: grid; grid-template-columns: 1fr 1.4fr; gap: 3rem; align-items: start; }
+.about p { max-width: 36rem; color: var(--muted); }
+.about p + p { margin-top: 1rem; }
+
+/* Closing band */
+.band { background: var(--band); color: var(--on-band); padding: 4.5rem 0; }
+.band p { margin-top: 1rem; max-width: 36rem; color: var(--on-band-muted); }
+.band .btn { margin-top: 1.75rem; background: var(--on-band); color: var(--band); }
+.band .btn:hover { background: #ffffff; }
+
+.foot { padding: 2rem 0 2.5rem; font-size: 0.88rem; color: var(--muted); }
+.foot p { max-width: 46rem; }
+.foot p + p { margin-top: 0.4rem; }
+
+@media (max-width: 640px) {
+  .tagline { display: none; }
+}
+@media (max-width: 860px) {
+  .hero { grid-template-columns: 1fr; gap: 2.5rem; padding-top: 2.75rem; padding-bottom: 2.5rem; }
+  .about { grid-template-columns: 1fr; gap: 1.25rem; }
+  .trio { grid-template-columns: 1fr; gap: 1.5rem; }
+  .mods li { grid-template-columns: 2.5rem 1fr; gap: 0.25rem 0.75rem; }
+  .mods li p { grid-column: 2; }
+  .section { padding: 2.75rem 0; }
+  .band { padding: 3.5rem 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .btn, .chip { transition: none; }
+}
+
+/* Waitlist form */
+.join { display: grid; grid-template-columns: 1fr 1.05fr; gap: 3rem; align-items: start; }
+.band .card { background: var(--panel); color: var(--ink); border-radius: 16px; padding: 1.75rem; }
+.band .card p { margin-top: 0; max-width: none; color: var(--muted); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.field { margin-top: 1rem; }
+.row2 .field { margin-top: 0; }
+.row2 + .field { margin-top: 1rem; }
+.field label { display: block; margin-bottom: 0.3rem; font-weight: 600; font-size: 0.95rem; }
+.field .opt { font-weight: 400; color: var(--muted); }
+.field input, .field select, .field textarea { width: 100%; min-height: 3rem; padding: 0.65rem 0.8rem; font: inherit; color: var(--ink); background: var(--bg); border: 1.5px solid var(--muted); border-radius: 10px; }
+.field textarea { min-height: 5.5rem; resize: vertical; }
+.band .card .hint { margin-top: 0.35rem; font-size: 0.88rem; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.band .card .btn { width: 100%; margin-top: 1.4rem; border: 0; cursor: pointer; background: var(--primary); color: var(--on-primary); }
+.band .card .btn:hover { background: var(--primary-hover); }
+.band .card .btn:disabled { opacity: 0.7; cursor: default; }
+.band .card .status { margin-top: 0.9rem; min-height: 1.4em; font-weight: 600; color: var(--ink); }
+.band .card .done h3 { color: var(--good); }
+.band .card .done p { margin-top: 0.6rem; color: var(--ink); }
+@media (max-width: 860px) { .join { grid-template-columns: 1fr; gap: 2rem; } }
+@media (max-width: 480px) { .row2 { grid-template-columns: 1fr; } .row2 .field + .field { margin-top: 1rem; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brandwrap">
+      <a class="brand" href="#top">
+        <svg class="mark" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M1 10 H8 L11 3 L15 17 L18 7 L20 10 H29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        The AI Fluent Nurse
+      </a>
+      <span class="tagline">Get AI-ready, one shift at a time.</span>
+    </div>
+    <a class="btn btn-sm" href="#waitlist">Join the waitlist</a>
+  </div>
+</header>
+
+<div class="alert-bar" role="note">
+  <div class="wrap">
+    <svg class="alert-icon" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="11" fill="currentColor"/><path class="bang" d="M11 5.5v6.5M11 15.6v0.4" fill="none" stroke-width="2.4" stroke-linecap="round"/></svg>
+    <span>Never enter patient names, birth dates, MRNs, or room numbers into any AI tool. Always follow your employer's AI policy.</span>
+  </div>
+</div>
+
+<main id="top">
+
+  <section class="hero-band">
+    <div class="wrap hero">
+      <div>
+        <h1>Save time on charting, handoffs, and patient education.</h1>
+        <p class="lede">Without risking your license or your patients' privacy. A practical AI course for LPNs, CNAs, and RNs, taught by a nurse with over 16 years of experience.</p>
+        <div class="actions">
+          <a class="btn" href="#waitlist">Join the waitlist</a>
+          <a class="link" href="#inside">See what's inside</a>
+        </div>
+        <p class="fine">Free to join. Takes under a minute.</p>
+      </div>
+
+      <div class="checker" role="group" aria-labelledby="chk-h">
+        <h2 id="chk-h">Can this go into a chatbot?</h2>
+        <p class="chk-sub">Tap an item. This is the kind of judgment call the course teaches.</p>
+        <div class="chips">
+          <button class="chip" type="button" aria-pressed="false" data-verdict="stop" data-why="Names identify a patient directly. Leave the name out entirely, or use a neutral placeholder like &quot;the resident.&quot;">Patient's full name</button>
+          <button class="chip" type="button" aria-pressed="false" data-verdict="stop" data-why="A room number can point to one person, especially alongside a date or a facility name.">Room number</button>
+          <button class="chip" type="button" aria-pressed="false" data-verdict="stop" data-why="Record numbers and birth dates are direct identifiers. Keep both out of any AI tool.">MRN or date of birth</button>
+          <button class="chip" type="button" aria-pressed="false" data-verdict="stop" data-why="Photos can identify a patient, and most employers restrict them. Describe what you see in words instead.">Photo of a wound</button>
+          <button class="chip" type="button" aria-pressed="false" data-verdict="ok" data-why="Often fine when nothing identifies the patient and your employer's policy allows AI tools. You still review every word of the draft.">Needed verbal cueing to use walker after lunch</button>
+          <button class="chip" type="button" aria-pressed="false" data-verdict="ok" data-why="General topics carry no patient information. Ask away, then double-check the facts before you use them.">Fall prevention as a teaching topic</button>
+        </div>
+        <div class="verdict" id="verdict" aria-live="polite">
+          <p class="empty">Pick an item to see the answer.</p>
+        </div>
+        <p class="chk-foot">Always follow your employer's AI policy.</p>
+      </div>
+    </div>
+    <svg class="pulse" viewBox="0 0 1200 44" preserveAspectRatio="none" aria-hidden="true"><path d="M0 22 H470 L490 22 L500 8 L512 38 L526 2 L540 32 L550 22 L574 22 H1200" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </section>
+
+  <section class="section" id="inside">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>What you'll learn</h2>
+        <p>Ten modules built around the situations you actually chart, report, and handle on a shift.</p>
+      </div>
+      <ol class="mods">
+        <li><span class="n">1</span><h3>AI Basics for Nurses</h3><p>What AI can and can't do, why it sometimes makes things up, and why you always verify.</p></li>
+        <li class="urgent"><span class="n">2</span><h3>Privacy and Safety First</h3><p>What never goes into a chatbot, how to remove identifying details, and how to check your employer's AI policy.</p></li>
+        <li><span class="n">3</span><h3>Faster Documentation</h3><p>Turn shorthand into clear drafts that you review and approve, using invented practice examples.</p></li>
+        <li><span class="n">4</span><h3>Admissions</h3><p>Organize intake information and draft clear admission notes.</p></li>
+        <li><span class="n">5</span><h3>Discharges and Patient Education</h3><p>Discharge summaries and plain-language instructions written at the right reading level.</p></li>
+        <li><span class="n">6</span><h3>Wound Documentation</h3><p>Consistent terminology and clear written descriptions, with no patient photos.</p></li>
+        <li><span class="n">7</span><h3>Handoffs and Shift Prep</h3><p>Organize report notes, build checklists, and prioritize your task list.</p></li>
+        <li><span class="n">8</span><h3>Nursing Calculations</h3><p>Use AI as a practice and second-check tool, and learn to catch its math errors.</p></li>
+        <li class="urgent"><span class="n">9</span><h3>Emergencies and Urgent Situations</h3><p>How AI helps before, with practice scenarios and protocol review, and after, with event documentation and debriefs.</p></li>
+        <li><span class="n">10</span><h3>Your Personal AI Playbook</h3><p>Build your own prompt library and a "when not to use AI" checklist.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>How the lessons work</h2>
+      </div>
+      <div class="trio">
+        <div>
+          <h3>Short video lessons</h3>
+          <p>About 5 to 10 minutes each, so you can learn in the gaps of a busy week.</p>
+        </div>
+        <div>
+          <h3>Copy-and-paste prompts</h3>
+          <p>Templates you can adapt to the documentation formats your facility uses.</p>
+        </div>
+        <div>
+          <h3>Quick knowledge checks</h3>
+          <p>A few questions at the end of each lesson to lock in the safety habits.</p>
+        </div>
+      </div>
+      <p class="note">Every example uses invented scenarios. No real patient information, ever.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="limits-box">
+        <h2>Clear limits, on purpose</h2>
+        <ul class="limits">
+          <li>AI drafts. You review, edit, and approve everything that goes in the chart.</li>
+          <li>AI should not guide real-time decisions during a code or rapid response. The course covers preparation beforehand and documentation afterward.</li>
+          <li>This is education only, not medical, legal, or compliance advice. Your facility's policies and your scope of practice always come first.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section soft">
+    <div class="wrap about">
+      <h2>Taught from the floor</h2>
+      <div>
+        <p>I'm Kim, an LPN licensed since 2010, with over 16 years of nursing experience. I've been building my skills at the intersection of healthcare and AI, and this course teaches what I'm learning in plain language.</p>
+        <p>You won't need a tech background. Everything is built around real shifts and real documentation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="waitlist">
+    <div class="wrap join">
+      <div>
+        <h2>Be first to know when the course opens.</h2>
+        <p>Join the waitlist and tell me what you most want help with. I'll use your answers to decide what to build first.</p>
+      </div>
+      <div class="card">
+        <form id="waitlist-form" novalidate>
+          <div class="row2">
+            <div class="field">
+              <label for="first_name">First name</label>
+              <input id="first_name" name="first_name" type="text" autocomplete="given-name" required>
+            </div>
+            <div class="field">
+              <label for="last_name">Last name <span class="opt">(optional)</span></label>
+              <input id="last_name" name="last_name" type="text" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+          </div>
+          <div class="field">
+            <label for="role">Your role <span class="opt">(optional)</span></label>
+            <select id="role" name="role">
+              <option value="">Choose one</option>
+              <option value="LPN">LPN</option>
+              <option value="CNA">CNA</option>
+              <option value="RN">RN</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="wants_help_with">What do you most want help with? <span class="opt">(optional)</span></label>
+            <textarea id="wants_help_with" name="wants_help_with" rows="3"></textarea>
+            <p class="hint">Please don't include any patient information.</p>
+          </div>
+          <div class="hp" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+          <button class="btn" type="submit">Join the waitlist</button>
+          <p class="hint">I'll only use your information to email you about the course. <a class="link" href="/privacy.html">Privacy notice</a></p>
+          <p id="form-status" class="status" role="status" aria-live="polite"></p>
+        </form>
+        <div id="form-done" class="done" hidden tabindex="-1">
+          <h3 id="done-title">You're on the list.</h3>
+          <p id="done-text">Thank you! I'll email you when the course opens.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>The AI Fluent Nurse. Get AI-ready, one shift at a time. <a class="link" href="/privacy.html">Privacy notice</a></p>
+    <p>For education only. Not medical, legal, or compliance advice. Always follow your employer's policies and your scope of practice.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var chips = document.querySelectorAll(".chip");
+  var box = document.getElementById("verdict");
+  if (!box) return;
+  chips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      chips.forEach(function (c) { c.setAttribute("aria-pressed", "false"); });
+      chip.setAttribute("aria-pressed", "true");
+      var stop = chip.getAttribute("data-verdict") === "stop";
+      box.className = "verdict " + (stop ? "is-stop" : "is-ok");
+      box.textContent = "";
+      var tag = document.createElement("span");
+      tag.className = "tag " + (stop ? "stop" : "ok");
+      tag.textContent = stop ? "Leave it out" : "Fine to use";
+      var why = document.createElement("p");
+      why.textContent = chip.getAttribute("data-why");
+      box.appendChild(tag);
+      box.appendChild(why);
+    });
+  });
+})();
+
+(function () {
+  var SUPABASE_URL = "https://pnalfkdewygqdmblxjoq.supabase.co";
+  var SUPABASE_KEY = "sb_publishable_QAIFChbnZk9PM3pbWzEGFA_sNsFlOuD";
+
+  var form = document.getElementById("waitlist-form");
+  if (!form) return;
+  var status = document.getElementById("form-status");
+  var done = document.getElementById("form-done");
+  var btn = form.querySelector("button[type=submit]");
+
+  function showDone(already) {
+    document.getElementById("done-title").textContent = already ? "You're already on the list." : "You're on the list.";
+    document.getElementById("done-text").textContent = already
+      ? "That email is already signed up, so you're all set."
+      : "Thank you! I'll email you when the course opens.";
+    form.hidden = true;
+    done.hidden = false;
+    done.focus();
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    status.textContent = "";
+    var f = form.elements;
+    if (f.website.value) { showDone(false); return; }
+    var first = f.first_name.value.trim();
+    var email = f.email.value.trim();
+    if (!first) { status.textContent = "Please enter your first name."; f.first_name.focus(); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { status.textContent = "Please enter a valid email address."; f.email.focus(); return; }
+
+    var row = {
+      email: email,
+      first_name: first,
+      last_name: f.last_name.value.trim() || null,
+      role: f.role.value || null,
+      wants_help_with: f.wants_help_with.value.trim() || null
+    };
+
+    btn.disabled = true;
+    btn.textContent = "Joining...";
+    fetch(SUPABASE_URL + "/rest/v1/waitlist", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "apikey": SUPABASE_KEY, "Prefer": "return=minimal" },
+      body: JSON.stringify(row)
+    }).then(function (res) {
+      if (res.ok) { showDone(false); return; }
+      if (res.status === 409) { showDone(true); return; }
+      throw new Error("HTTP " + res.status);
+    }).catch(function () {
+      status.textContent = "Something went wrong and your signup didn't go through. Please try again in a minute.";
+      btn.disabled = false;
+      btn.textContent = "Join the waitlist";
+    });
+  });
+})();
+</script>
+</body>
+</html>
