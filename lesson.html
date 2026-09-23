@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>Lesson | The AI Fluent Nurse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/course.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/course.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player@3" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandwrap">
+      <a class="brand" href="/dashboard.html">
+        <svg class="mark" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M1 10 H8 L11 3 L15 17 L18 7 L20 10 H29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        The AI Fluent Nurse
+      </a>
+    </div>
+    <div class="userbar"><span class="who" id="who"></span><button class="btn btn-ghost btn-sm" type="button" id="signout">Sign out</button></div>
+  </div>
+</header>
+<main class="main">
+  <div class="wrap narrow" style="max-width:52rem">
+    <p class="crumbs"><a href="/dashboard.html">Your course</a> <span id="crumb-mod"></span></p>
+    <div class="lesson-head"><h1 id="title">Loading...</h1></div>
+    <div class="player" id="player"><div class="msg">Loading video...</div></div>
+    <div class="body" id="body"></div>
+    <div class="finish" id="finish" hidden>
+      <button class="btn" type="button" id="mark">Mark lesson as done</button>
+      <span class="status ok" id="mark-status" role="status" style="margin:0"></span>
+    </div>
+    <nav class="pager" id="pager" aria-label="Lessons"></nav>
+  </div>
+</main>
+<script>
+(async function () {
+  var session = await AFN.requireUser();
+  if (!session) return;
+  var el = AFN.el, sb = AFN.sb;
+  var id = new URLSearchParams(location.search).get("id") || "";
+  var titleEl = document.getElementById("title");
+  var player = document.getElementById("player");
+  var body = document.getElementById("body");
+
+  function stop(msg) {
+    titleEl.textContent = "This lesson isn't available";
+    player.hidden = true;
+    body.textContent = "";
+    var n = el("div", { class: "notice" }, msg);
+    body.appendChild(n);
+  }
+  if (!/^[0-9a-f-]{36}$/i.test(id)) { stop("That lesson link looks incomplete. Go back to your course and choose a lesson."); return; }
+
+  var r = await sb.from("lessons").select("id,title,position,body_md,module_id,modules(position,title)").eq("id", id).maybeSingle();
+  if (r.error || !r.data) {
+    var ok = await AFN.hasCourseAccess(session.user.id);
+    stop(ok ? "We couldn't find that lesson. Go back to your course and choose a lesson."
+            : "Your enrollment isn't active yet, so lessons are locked. If you've just enrolled, give it a few minutes. If this doesn't change, email Admin@aifluentnurse.com.");
+    return;
+  }
+  var L = r.data, M = L.modules || {};
+  document.title = L.title + " | The AI Fluent Nurse";
+  titleEl.textContent = "Lesson " + L.position + ": " + L.title;
+  document.getElementById("crumb-mod").textContent = "/ Module " + M.position + ": " + M.title;
+
+  // Video: ask our server for short-lived signed tokens.
+  (async function () {
+    try {
+      var t = await fetch("/api/playback-token?lesson=" + encodeURIComponent(id), {
+        headers: { Authorization: "Bearer " + session.access_token }
+      });
+      if (!t.ok) throw new Error(String(t.status));
+      var v = await t.json();
+      player.textContent = "";
+      var mp = document.createElement("mux-player");
+      mp.setAttribute("playback-id", v.playbackId);
+      mp.setAttribute("playback-token", v.playback);
+      mp.setAttribute("thumbnail-token", v.thumbnail);
+      mp.setAttribute("storyboard-token", v.storyboard);
+      mp.setAttribute("stream-type", "on-demand");
+      mp.setAttribute("default-show-remaining-time", "");
+      mp.setAttribute("accent-color", "#6d3fc0");
+      mp.setAttribute("metadata-video-title", L.title);
+      mp.setAttribute("title", "Lesson " + L.position + ": " + L.title);
+      mp.setAttribute("default-subtitles-lang", "en");
+      player.appendChild(mp);
+    } catch (e) {
+      player.innerHTML = '<div class="msg">The video didn\'t load. Refresh the page to try again.</div>';
+    }
+  })();
+
+  // Lesson text: markdown, with ```quiz blocks turned into knowledge checks.
+  var quizzes = [];
+  var md = (L.body_md || "").replace(/\r\n?/g, "\n").replace(/```\s*quiz[^\n]*\n([\s\S]*?)```/g, function (_, q) {
+    quizzes.push(q); return '\n<div class="quiz" data-quiz="' + (quizzes.length - 1) + '"></div>\n';
+  });
+  body.innerHTML = DOMPurify.sanitize(marked.parse(md), { ADD_ATTR: ["data-quiz"] });
+
+  body.querySelectorAll("pre").forEach(function (pre) {
+    var b = el("button", { class: "copy", type: "button" }, "Copy");
+    b.addEventListener("click", function () {
+      var code = pre.querySelector("code");
+      navigator.clipboard.writeText((code || pre).textContent).then(function () {
+        b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1600);
+      });
+    });
+    pre.appendChild(b);
+  });
+
+  body.querySelectorAll("[data-quiz]").forEach(function (box) {
+    var text = quizzes[+box.getAttribute("data-quiz")] || "";
+    var qs = [], cur = null;
+    text.split("\n").forEach(function (line) {
+      line = line.trim();
+      if (line.indexOf("Q:") === 0) { cur = { q: line.slice(2).trim(), opts: [] }; qs.push(cur); }
+      else if (cur && (line[0] === "-" || line[0] === "*")) cur.opts.push({ t: line.slice(1).trim(), right: line[0] === "*" });
+    });
+    qs.forEach(function (q, qi) {
+      var wrap = el("div", { class: "q" });
+      var fs = el("fieldset");
+      fs.appendChild(el("legend", null, (qi + 1) + ". " + q.q));
+      var fb = el("p", { class: "fb", role: "status" });
+      q.opts.forEach(function (o, oi) {
+        var lab = el("label");
+        var inp = el("input", { type: "radio", name: "q" + box.getAttribute("data-quiz") + "_" + qi, value: String(oi) });
+        lab.appendChild(inp); lab.appendChild(el("span", null, o.t));
+        inp.addEventListener("change", function () {
+          fs.querySelectorAll("label").forEach(function (x) { x.className = ""; });
+          lab.className = o.right ? "right" : "wrong";
+          fb.className = "fb " + (o.right ? "right" : "wrong");
+          fb.textContent = o.right ? "That's right." : "Not quite. Try another answer.";
+        });
+        fs.appendChild(lab);
+      });
+      wrap.appendChild(fs); wrap.appendChild(fb); box.appendChild(wrap);
+    });
+  });
+
+  // Mark as done.
+  var mark = document.getElementById("mark"), ms = document.getElementById("mark-status");
+  document.getElementById("finish").hidden = false;
+  var p = await sb.from("lesson_progress").select("lesson_id").eq("lesson_id", id).maybeSingle();
+  var isDone = !!(p.data);
+  function paint() { mark.textContent = isDone ? "Done \u2713 (mark as not done)" : "Mark lesson as done"; mark.className = isDone ? "btn btn-ghost" : "btn"; }
+  paint();
+  mark.addEventListener("click", async function () {
+    mark.disabled = true; ms.textContent = "";
+    var res = isDone
+      ? await sb.from("lesson_progress").delete().eq("lesson_id", id).eq("user_id", session.user.id)
+      : await sb.from("lesson_progress").insert({ user_id: session.user.id, lesson_id: id });
+    mark.disabled = false;
+    if (res.error && res.error.code !== "23505") { ms.className = "status err"; ms.textContent = "That didn't save. Please try again."; return; }
+    isDone = !isDone; paint();
+    ms.className = "status ok"; ms.textContent = isDone ? "Saved. Nice work." : "";
+  });
+
+  // Previous and next lessons.
+  var all = await sb.from("lessons").select("id,position,title,modules(position)").eq("is_published", true);
+  var list = (all.data || []).sort(function (a, b) {
+    return ((a.modules || {}).position - (b.modules || {}).position) || (a.position - b.position);
+  });
+  var i = list.findIndex(function (x) { return x.id === id; });
+  var pager = document.getElementById("pager");
+  if (i > 0) pager.appendChild(el("a", { class: "link", href: "/lesson.html?id=" + list[i - 1].id }, "\u2190 " + list[i - 1].title));
+  else pager.appendChild(el("span"));
+  if (i >= 0 && i < list.length - 1) pager.appendChild(el("a", { class: "link", href: "/lesson.html?id=" + list[i + 1].id }, list[i + 1].title + " \u2192"));
+})();
+</script>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>The AI Fluent Nurse. Get AI-ready, one shift at a time. <a class="link" href="/privacy.html">Privacy notice</a></p>
+    <p>For education only. Not medical, legal, or compliance advice. Always follow your employer's policies and your scope of practice.</p>
+  </div>
+</footer>
+</body>
+</html>
