@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>Your course | The AI Fluent Nurse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/course.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/course.js"></script>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandwrap">
+      <a class="brand" href="/dashboard.html">
+        <svg class="mark" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M1 10 H8 L11 3 L15 17 L18 7 L20 10 H29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        The AI Fluent Nurse
+      </a>
+    </div>
+    <div class="userbar"><span class="who" id="who"></span><button class="btn btn-ghost btn-sm" type="button" id="signout">Sign out</button></div>
+  </div>
+</header>
+<main class="main">
+  <div class="wrap">
+    <h1 style="font-size:clamp(2rem,4.5vw,2.8rem)">Your course</h1>
+    <p class="muted" style="margin-top:0.5rem">Work through the lessons in order. Finish Module 2 before using AI on anything from real work.</p>
+    <div id="content" style="margin-top:1.5rem"><p class="muted">Loading your lessons...</p></div>
+  </div>
+</main>
+<script>
+(async function () {
+  var session = await AFN.requireUser();
+  if (!session) return;
+  var box = document.getElementById("content");
+  var el = AFN.el;
+
+  var access = await AFN.hasCourseAccess(session.user.id);
+  var mods = await AFN.sb.from("modules")
+    .select("id,position,title,summary,lessons(id,position,title,is_published)")
+    .eq("is_published", true).order("position");
+  var prog = await AFN.sb.from("lesson_progress").select("lesson_id");
+  var done = {};
+  (prog.data || []).forEach(function (p) { done[p.lesson_id] = true; });
+
+  box.textContent = "";
+  if (!access) {
+    var n = el("div", { class: "notice" });
+    n.appendChild(el("strong", null, "Your enrollment isn't active yet. "));
+    n.appendChild(document.createTextNode("If you've just enrolled, give it a few minutes. If this doesn't change, email Admin@aifluentnurse.com from the address you signed in with."));
+    box.appendChild(n);
+  }
+  if (mods.error) { box.appendChild(el("p", { class: "status err" }, "We couldn't load your lessons. Please refresh the page.")); return; }
+
+  (mods.data || []).forEach(function (m) {
+    var lessons = (m.lessons || []).filter(function (l) { return l.is_published; }).sort(function (a, b) { return a.position - b.position; });
+    if (!lessons.length) return;
+    var sec = el("section", { class: "module" });
+    sec.appendChild(el("h2", null, "Module " + m.position + ": " + m.title));
+    if (m.summary) sec.appendChild(el("p", { class: "summary" }, m.summary));
+    var count = lessons.filter(function (l) { return done[l.id]; }).length;
+    sec.appendChild(el("p", { class: "muted", style: "margin-top:0.3rem;font-size:0.95rem" }, count + " of " + lessons.length + " lessons done"));
+    var ul = el("ul", { class: "lesson-list" });
+    lessons.forEach(function (l) {
+      var li = el("li", done[l.id] ? { class: "done" } : null);
+      var a = el("a", { href: "/lesson.html?id=" + l.id });
+      a.appendChild(el("span", { class: "num", "aria-hidden": "true" }, done[l.id] ? "\u2713" : String(l.position)));
+      a.appendChild(el("span", { class: "t" }, "Lesson " + l.position + ": " + l.title));
+      a.appendChild(el("span", { class: "state" }, done[l.id] ? "Done" : "Not started"));
+      li.appendChild(a); ul.appendChild(li);
+    });
+    sec.appendChild(ul);
+    box.appendChild(sec);
+  });
+})();
+</script>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>The AI Fluent Nurse. Get AI-ready, one shift at a time. <a class="link" href="/privacy.html">Privacy notice</a></p>
+    <p>For education only. Not medical, legal, or compliance advice. Always follow your employer's policies and your scope of practice.</p>
+  </div>
+</footer>
+</body>
+</html>

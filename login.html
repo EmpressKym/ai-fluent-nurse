@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>Sign in | The AI Fluent Nurse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/course.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/course.js"></script>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandwrap">
+      <a class="brand" href="/dashboard.html">
+        <svg class="mark" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M1 10 H8 L11 3 L15 17 L18 7 L20 10 H29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        The AI Fluent Nurse
+      </a>
+    </div>
+    <a class="link" href="/">Home</a>
+  </div>
+</header>
+<main class="main">
+  <div class="wrap narrow">
+    <div class="card">
+      <h1 style="font-size:2.2rem">Student sign-in</h1>
+      <p class="muted" style="margin-top:0.6rem">Enter the email you enrolled with. We'll send you a sign-in link, so there's no password to remember.</p>
+      <form id="login-form" novalidate>
+        <label class="field">Email
+          <input type="email" name="email" autocomplete="email" required>
+        </label>
+        <button class="btn" type="submit" style="margin-top:1.25rem">Email me a sign-in link</button>
+      </form>
+      <div id="sent" hidden tabindex="-1">
+        <h2 style="font-size:1.5rem;margin-top:1rem">Check your email</h2>
+        <p class="muted" style="margin-top:0.5rem">We sent a sign-in link to <strong id="sent-to"></strong>. Open it on this device to go to your course. It can take a minute, so check your spam folder too.</p>
+        <button class="btn btn-ghost btn-sm" type="button" id="again" style="margin-top:1rem">Use a different email</button>
+      </div>
+      <p class="status" id="status" role="status"></p>
+    </div>
+  </div>
+</main>
+<script>
+(async function () {
+  var params = new URLSearchParams(location.search);
+  var next = params.get("next") || "/dashboard.html";
+  if (!/^\/[A-Za-z0-9_\-./?=&%]*$/.test(next) || next.indexOf("//") === 0) next = "/dashboard.html";
+  var status = document.getElementById("status");
+  var form = document.getElementById("login-form");
+  var sent = document.getElementById("sent");
+
+  // Coming back from the email link: the session is picked up automatically.
+  var s = await AFN.sb.auth.getSession();
+  if (s.data && s.data.session) { location.replace(next); return; }
+  AFN.sb.auth.onAuthStateChange(function (event, session) { if (session) location.replace(next); });
+  if (location.hash.indexOf("error") !== -1) {
+    status.className = "status err";
+    status.textContent = "That sign-in link has expired or was already used. Enter your email to get a new one.";
+  }
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var email = form.elements.email.value.trim();
+    status.className = "status";
+    status.textContent = "";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      status.className = "status err"; status.textContent = "Please enter a valid email address."; return;
+    }
+    var btn = form.querySelector("button");
+    btn.disabled = true; btn.textContent = "Sending...";
+    var r = await AFN.sb.auth.signInWithOtp({
+      email: email,
+      options: { emailRedirectTo: location.origin + "/login.html?next=" + encodeURIComponent(next) }
+    });
+    btn.disabled = false; btn.textContent = "Email me a sign-in link";
+    if (r.error) {
+      status.className = "status err";
+      status.textContent = /rate|seconds/i.test(r.error.message)
+        ? "Too many sign-in emails just now. Please wait a minute and try again."
+        : "We couldn't send the link. Please try again in a minute.";
+      return;
+    }
+    document.getElementById("sent-to").textContent = email;
+    form.hidden = true; sent.hidden = false; sent.focus();
+  });
+  document.getElementById("again").addEventListener("click", function () {
+    sent.hidden = true; form.hidden = false; form.elements.email.focus();
+  });
+})();
+</script>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>The AI Fluent Nurse. Get AI-ready, one shift at a time. <a class="link" href="/privacy.html">Privacy notice</a></p>
+    <p>For education only. Not medical, legal, or compliance advice. Always follow your employer's policies and your scope of practice.</p>
+  </div>
+</footer>
+</body>
+</html>
