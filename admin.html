@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>Admin | The AI Fluent Nurse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/course.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/course.js"></script>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandwrap">
+      <a class="brand" href="/dashboard.html">
+        <svg class="mark" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M1 10 H8 L11 3 L15 17 L18 7 L20 10 H29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        The AI Fluent Nurse
+      </a>
+    </div>
+    <div class="userbar"><span class="who" id="who"></span><button class="btn btn-ghost btn-sm" type="button" id="signout">Sign out</button></div>
+  </div>
+</header>
+<main class="main">
+  <div class="wrap">
+    <p class="crumbs"><a href="/dashboard.html">Your course</a> / Admin</p>
+    <h1 style="font-size:clamp(2rem,4.5vw,2.8rem);margin-top:0.4rem">Admin</h1>
+    <div id="denied" class="notice" hidden style="margin-top:1.5rem">This page is only for the course owner.</div>
+    <div id="admin" hidden>
+
+      <section class="card" style="margin-top:1.5rem">
+        <h2 style="font-size:1.5rem">Enroll students</h2>
+        <p class="muted" style="margin-top:0.4rem">Paste one or more emails, separated by commas, spaces, or new lines. People who haven't signed in yet are enrolled automatically the first time they do.</p>
+        <label class="field">Emails
+          <textarea id="emails" rows="4" style="display:block;width:100%;margin-top:0.4rem;padding:0.8rem 0.9rem;font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;resize:vertical"></textarea>
+        </label>
+        <button class="btn" type="button" id="enroll" style="margin-top:1rem">Enroll</button>
+        <p class="status" id="enroll-status" role="status"></p>
+        <ul id="enroll-results" style="margin:0.5rem 0 0;padding-left:1.2rem"></ul>
+      </section>
+
+      <section style="margin-top:2.5rem">
+        <h2 style="font-size:1.5rem">Students</h2>
+        <p class="muted" id="count" style="margin-top:0.3rem"></p>
+        <div class="tablewrap"><table class="grid" id="students">
+          <thead><tr><th>Email</th><th>Status</th><th>Account</th><th>Lessons done</th><th>Since</th><th><span class="sr">Actions</span></th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </section>
+
+      <section style="margin-top:2.5rem">
+        <h2 style="font-size:1.5rem">Waitlist</h2>
+        <p class="muted" style="margin-top:0.3rem">People who joined the waitlist on your home page. Click <strong>Enroll</strong> to give someone access.</p>
+        <div class="tablewrap"><table class="grid" id="waitlist">
+          <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Wants help with</th><th>Joined</th><th><span class="sr">Actions</span></th></tr></thead>
+          <tbody></tbody>
+        </table></div>
+      </section>
+    </div>
+  </div>
+</main>
+<style>
+.tablewrap { margin-top: 1rem; overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--panel); }
+table.grid { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+table.grid th, table.grid td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.grid th { font-size: 0.85rem; color: var(--muted); font-weight: 700; background: var(--soft); white-space: nowrap; }
+table.grid tr:last-child td { border-bottom: 0; }
+table.grid td.empty { color: var(--muted); text-align: center; padding: 1.4rem; }
+.pill { display: inline-block; padding: 0.1rem 0.6rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; background: var(--soft); color: var(--muted); }
+.pill.active { background: var(--good-bg); color: var(--good); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.mini { font: inherit; font-size: 0.85rem; font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+.mini.go { background: var(--primary); color: var(--on-primary); border: 0; }
+.mini.stop { background: transparent; color: var(--alert); border: 1px solid var(--alert-line); }
+</style>
+<script>
+(async function () {
+  var session = await AFN.requireUser();
+  if (!session) return;
+  var sb = AFN.sb, el = AFN.el;
+  var ok = await sb.rpc("is_admin");
+  if (ok.error || ok.data !== true) { document.getElementById("denied").hidden = false; return; }
+  document.getElementById("admin").hidden = false;
+
+  var enrolled = {};
+  function fmt(d) { return d ? new Date(d).toLocaleDateString() : ""; }
+  function emptyRow(tbody, cols, text) {
+    var tr = el("tr"); var td = el("td", { class: "empty", colspan: String(cols) }, text); tr.appendChild(td); tbody.appendChild(tr);
+  }
+
+  async function loadStudents() {
+    var r = await sb.rpc("admin_students");
+    var tbody = document.querySelector("#students tbody"); tbody.textContent = "";
+    enrolled = {};
+    if (r.error) { emptyRow(tbody, 6, "Couldn't load students. Refresh the page."); return; }
+    var rows = r.data || [];
+    document.getElementById("count").textContent = rows.length + (rows.length === 1 ? " student" : " students");
+    if (!rows.length) { emptyRow(tbody, 6, "No students yet."); return; }
+    rows.forEach(function (s) {
+      enrolled[s.s_email] = true;
+      var tr = el("tr");
+      tr.appendChild(el("td", null, s.s_email));
+      var st = el("td"); st.appendChild(el("span", { class: "pill" + (s.s_status === "active" ? " active" : "") }, s.s_status)); tr.appendChild(st);
+      tr.appendChild(el("td", null, s.s_account));
+      tr.appendChild(el("td", null, s.s_done + " of 10"));
+      tr.appendChild(el("td", null, fmt(s.s_since)));
+      var act = el("td"); var b = el("button", { class: "mini stop", type: "button" }, "Remove access");
+      b.addEventListener("click", async function () {
+        if (!confirm("Remove course access for " + s.s_email + "? You can enroll them again any time.")) return;
+        b.disabled = true;
+        var x = await sb.rpc("admin_remove", { p_email: s.s_email });
+        if (x.error) { alert("That didn't work. Please try again."); b.disabled = false; return; }
+        await loadStudents(); await loadWaitlist();
+      });
+      act.appendChild(b); tr.appendChild(act); tbody.appendChild(tr);
+    });
+  }
+
+  async function loadWaitlist() {
+    var r = await sb.rpc("admin_waitlist");
+    var tbody = document.querySelector("#waitlist tbody"); tbody.textContent = "";
+    if (r.error) { emptyRow(tbody, 6, "Couldn't load the waitlist. Refresh the page."); return; }
+    var rows = (r.data || []).sort(function (a, b) { return String(b.created_at || "").localeCompare(String(a.created_at || "")); });
+    if (!rows.length) { emptyRow(tbody, 6, "Nobody on the waitlist yet."); return; }
+    rows.forEach(function (w) {
+      var email = String(w.email || "").toLowerCase();
+      var tr = el("tr");
+      tr.appendChild(el("td", null, [w.first_name, w.last_name].filter(Boolean).join(" ")));
+      tr.appendChild(el("td", null, email));
+      tr.appendChild(el("td", null, w.role || ""));
+      tr.appendChild(el("td", null, w.wants_help_with || ""));
+      tr.appendChild(el("td", null, fmt(w.created_at)));
+      var act = el("td");
+      if (enrolled[email]) act.appendChild(el("span", { class: "pill active" }, "Enrolled"));
+      else {
+        var b = el("button", { class: "mini go", type: "button" }, "Enroll");
+        b.addEventListener("click", async function () {
+          b.disabled = true;
+          var x = await sb.rpc("admin_enroll", { emails: [email] });
+          if (x.error) { alert("That didn't work. Please try again."); b.disabled = false; return; }
+          await loadStudents(); await loadWaitlist();
+        });
+        act.appendChild(b);
+      }
+      tr.appendChild(act); tbody.appendChild(tr);
+    });
+  }
+
+  document.getElementById("enroll").addEventListener("click", async function () {
+    var btn = this, status = document.getElementById("enroll-status"), out = document.getElementById("enroll-results");
+    out.textContent = ""; status.className = "status"; status.textContent = "";
+    var list = document.getElementById("emails").value.split(/[\s,;]+/).map(function (e) { return e.trim().toLowerCase(); }).filter(Boolean);
+    var bad = list.filter(function (e) { return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); });
+    if (!list.length) { status.className = "status err"; status.textContent = "Paste at least one email."; return; }
+    if (bad.length) { status.className = "status err"; status.textContent = "These don't look like emails: " + bad.join(", "); return; }
+    btn.disabled = true; btn.textContent = "Enrolling...";
+    var r = await sb.rpc("admin_enroll", { emails: list });
+    btn.disabled = false; btn.textContent = "Enroll";
+    if (r.error) { status.className = "status err"; status.textContent = "That didn't work. Please try again."; return; }
+    status.className = "status ok"; status.textContent = "Done. Send them to aifluentnurse.com and have them click Student sign in.";
+    (r.data || []).forEach(function (x) { out.appendChild(el("li", null, x.student_email + ": " + x.result)); });
+    document.getElementById("emails").value = "";
+    await loadStudents(); await loadWaitlist();
+  });
+
+  await loadStudents();
+  await loadWaitlist();
+})();
+</script>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>The AI Fluent Nurse. Get AI-ready, one shift at a time. <a class="link" href="/privacy.html">Privacy notice</a></p>
+    <p>For education only. Not medical, legal, or compliance advice. Always follow your employer's policies and your scope of practice.</p>
+  </div>
+</footer>
+</body>
+</html>

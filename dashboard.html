@@ -40,6 +40,11 @@
   var box = document.getElementById("content");
   var el = AFN.el;
 
+  var adm = await AFN.sb.rpc("is_admin");
+  if (adm.data === true) {
+    var bar = document.querySelector(".userbar");
+    if (bar) bar.insertBefore(el("a", { class: "link", href: "/admin.html" }, "Admin"), bar.firstChild);
+  }
   var access = await AFN.hasCourseAccess(session.user.id);
   var mods = await AFN.sb.from("modules")
     .select("id,position,title,summary,lessons(id,position,title,is_published)")
