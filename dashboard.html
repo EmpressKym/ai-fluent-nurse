@@ -54,6 +54,15 @@
   (prog.data || []).forEach(function (p) { done[p.lesson_id] = true; });
 
   box.textContent = "";
+  if (access) {
+    var fbn = el("div", { class: "notice", style: "display:flex;flex-wrap:wrap;gap:0.8rem 1.2rem;align-items:center;justify-content:space-between" });
+    var ft = el("p", null, "");
+    ft.appendChild(el("strong", null, "You're part of the pilot. "));
+    ft.appendChild(document.createTextNode("When you finish a module, please tell me how it went."));
+    fbn.appendChild(ft);
+    fbn.appendChild(el("a", { class: "btn btn-sm", href: "/feedback.html" }, "Share feedback"));
+    box.appendChild(fbn);
+  }
   if (!access) {
     var n = el("div", { class: "notice" });
     n.appendChild(el("strong", null, "Your enrollment isn't active yet. "));

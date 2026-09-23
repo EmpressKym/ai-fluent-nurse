@@ -54,6 +54,12 @@
       </section>
 
       <section style="margin-top:2.5rem">
+        <h2 style="font-size:1.5rem">Pilot feedback</h2>
+        <p class="muted" id="fb-summary" style="margin-top:0.3rem"></p>
+        <div id="fb-list" class="stack" style="margin-top:1rem"></div>
+      </section>
+
+      <section style="margin-top:2.5rem">
         <h2 style="font-size:1.5rem">Waitlist</h2>
         <p class="muted" style="margin-top:0.3rem">People who joined the waitlist on your home page. Click <strong>Enroll</strong> to give someone access.</p>
         <div class="tablewrap"><table class="grid" id="waitlist">
@@ -168,7 +174,33 @@ table.grid td.empty { color: var(--muted); text-align: center; padding: 1.4rem; 
     await loadStudents(); await loadWaitlist();
   });
 
+  async function loadFeedback() {
+    var r = await sb.rpc("admin_feedback");
+    var list = document.getElementById("fb-list"), sum = document.getElementById("fb-summary");
+    list.textContent = "";
+    if (r.error) { sum.textContent = "Couldn't load feedback. Refresh the page."; return; }
+    var rows = r.data || [];
+    if (!rows.length) { sum.textContent = "No feedback yet."; return; }
+    function avg(k) { var v = rows.map(function (x) { return x[k]; }).filter(function (x) { return x != null; }); return v.length ? (v.reduce(function (a, b) { return a + b; }, 0) / v.length).toFixed(1) : "none"; }
+    var pay = rows.filter(function (x) { return x.would_pay === "Yes"; }).length;
+    sum.textContent = rows.length + (rows.length === 1 ? " response" : " responses") + ". Average clarity: " + avg("clarity") + " of 5. Average recommend: " + avg("recommend") + " of 10. Would pay: " + pay + " said yes.";
+    var labels = [["modules_done", "Finished"], ["clarity", "Clarity (1 to 5)"], ["most_useful", "Most useful"], ["confusing", "Confusing or missing"],
+      ["video_length", "Video length"], ["recommend", "Recommend (0 to 10)"], ["would_pay", "Would pay"], ["fair_price", "Fair price"], ["anything_else", "Anything else"]];
+    rows.forEach(function (f) {
+      var c = el("div", { class: "card" });
+      c.appendChild(el("p", { class: "muted", style: "font-size:0.9rem" }, (f.email || "unknown") + ", " + fmt(f.created_at)));
+      var dl = el("dl", { style: "margin:0.6rem 0 0" });
+      labels.forEach(function (L) {
+        if (f[L[0]] == null || f[L[0]] === "") return;
+        dl.appendChild(el("dt", { style: "font-weight:700;margin-top:0.5rem" }, L[1]));
+        dl.appendChild(el("dd", { style: "margin:0.1rem 0 0;white-space:pre-wrap" }, String(f[L[0]])));
+      });
+      c.appendChild(dl); list.appendChild(c);
+    });
+  }
+
   await loadStudents();
+  await loadFeedback();
   await loadWaitlist();
 })();
 </script>

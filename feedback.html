@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex">
+<title>Pilot feedback | The AI Fluent Nurse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/course.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script src="/course.js"></script>
+
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brandwrap">
+      <a class="brand" href="/dashboard.html">
+        <svg class="mark" width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M1 10 H8 L11 3 L15 17 L18 7 L20 10 H29" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        The AI Fluent Nurse
+      </a>
+    </div>
+    <div class="userbar"><span class="who" id="who"></span><button class="btn btn-ghost btn-sm" type="button" id="signout">Sign out</button></div>
+  </div>
+</header>
+<main class="main">
+  <div class="wrap narrow">
+    <p class="crumbs"><a href="/dashboard.html">Your course</a> / Feedback</p>
+    <h1 style="font-size:clamp(2rem,4.5vw,2.6rem);margin-top:0.4rem">Tell me how it went</h1>
+    <p class="muted" style="margin-top:0.6rem">Thank you for testing the course. Your answers go only to me, and they shape what I fix and build next. It takes about 3 minutes.</p>
+    <div class="notice alert" style="margin-top:1.2rem"><strong>Please don't include any patient information</strong> in your answers.</div>
+
+    <form id="fb" class="card" style="margin-top:1.5rem" novalidate>
+      <fieldset class="qset"><legend>Which modules have you finished?</legend>
+        <label><input type="radio" name="modules_done" value="Part of Module 1"> Part of Module 1</label>
+        <label><input type="radio" name="modules_done" value="Module 1"> Module 1</label>
+        <label><input type="radio" name="modules_done" value="Modules 1 and 2"> Modules 1 and 2</label>
+      </fieldset>
+
+      <fieldset class="qset"><legend>How clear were the lessons?</legend>
+        <div class="scale" data-name="clarity" data-min="1" data-max="5"></div>
+        <p class="hint">1 = hard to follow, 5 = very clear</p>
+      </fieldset>
+
+      <label class="field">What was most useful?
+        <textarea name="most_useful" rows="3" maxlength="3000"></textarea></label>
+
+      <label class="field">What was confusing, or what was missing?
+        <textarea name="confusing" rows="3" maxlength="3000"></textarea></label>
+
+      <fieldset class="qset"><legend>How did the video length feel?</legend>
+        <label><input type="radio" name="video_length" value="Too short"> Too short</label>
+        <label><input type="radio" name="video_length" value="About right"> About right</label>
+        <label><input type="radio" name="video_length" value="Too long"> Too long</label>
+      </fieldset>
+
+      <fieldset class="qset"><legend>How likely are you to recommend this course to a nurse you work with?</legend>
+        <div class="scale" data-name="recommend" data-min="0" data-max="10"></div>
+        <p class="hint">0 = not at all likely, 10 = extremely likely</p>
+      </fieldset>
+
+      <fieldset class="qset"><legend>Would you pay for the full course?</legend>
+        <label><input type="radio" name="would_pay" value="Yes"> Yes</label>
+        <label><input type="radio" name="would_pay" value="Maybe"> Maybe</label>
+        <label><input type="radio" name="would_pay" value="No"> No</label>
+      </fieldset>
+
+      <label class="field">What price would feel fair to you? (optional)
+        <input type="text" name="fair_price" maxlength="200"></label>
+
+      <label class="field">Anything else you'd like me to know? (optional)
+        <textarea name="anything_else" rows="3" maxlength="3000"></textarea></label>
+
+      <button class="btn" type="submit" style="margin-top:1.5rem">Send feedback</button>
+      <p class="status" id="status" role="status"></p>
+    </form>
+
+    <div id="thanks" class="card" hidden tabindex="-1" style="margin-top:1.5rem">
+      <h2 style="font-size:1.6rem">Thank you!</h2>
+      <p class="muted" style="margin-top:0.5rem">Your feedback was sent. It really helps.</p>
+      <a class="btn btn-sm" href="/dashboard.html" style="margin-top:1rem">Back to your course</a>
+    </div>
+  </div>
+</main>
+<style>
+.qset { border: 0; margin: 1.5rem 0 0; padding: 0; }
+.qset legend { font-weight: 600; padding: 0; }
+.qset > label { display: flex; gap: 0.6rem; align-items: center; margin-top: 0.5rem; cursor: pointer; }
+.qset input { accent-color: var(--primary); }
+.field textarea { display: block; width: 100%; margin-top: 0.4rem; padding: 0.8rem 0.9rem; font: inherit; color: var(--ink); background: var(--bg); border: 1.5px solid var(--line); border-radius: 10px; resize: vertical; }
+.field textarea:focus { border-color: var(--primary); }
+.scale { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.6rem; }
+.scale label { position: relative; }
+.scale input { position: absolute; opacity: 0; inset: 0; }
+.scale span { display: grid; place-items: center; min-width: 2.6rem; height: 2.6rem; padding: 0 0.5rem; border: 1.5px solid var(--line); border-radius: 10px; font-weight: 700; cursor: pointer; background: var(--bg); }
+.scale input:checked + span { background: var(--primary); color: var(--on-primary); border-color: var(--primary); }
+.scale input:focus-visible + span { outline: 3px solid var(--focus); outline-offset: 2px; }
+.hint { margin-top: 0.4rem; font-size: 0.88rem; color: var(--muted); }
+</style>
+<script>
+(async function () {
+  var session = await AFN.requireUser();
+  if (!session) return;
+  document.querySelectorAll(".scale").forEach(function (box) {
+    var name = box.getAttribute("data-name");
+    for (var i = +box.getAttribute("data-min"); i <= +box.getAttribute("data-max"); i++) {
+      var lab = document.createElement("label");
+      var inp = document.createElement("input"); inp.type = "radio"; inp.name = name; inp.value = String(i);
+      inp.setAttribute("aria-label", String(i));
+      var span = document.createElement("span"); span.textContent = String(i);
+      lab.appendChild(inp); lab.appendChild(span); box.appendChild(lab);
+    }
+  });
+  var form = document.getElementById("fb"), status = document.getElementById("status");
+  function val(n) { var e = form.elements[n]; if (!e) return null; var v = (e.value || "").trim(); return v || null; }
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    var row = {
+      user_id: session.user.id,
+      modules_done: val("modules_done"),
+      clarity: val("clarity") ? +val("clarity") : null,
+      most_useful: val("most_useful"),
+      confusing: val("confusing"),
+      video_length: val("video_length"),
+      recommend: val("recommend") != null ? +val("recommend") : null,
+      would_pay: val("would_pay"),
+      fair_price: val("fair_price"),
+      anything_else: val("anything_else")
+    };
+    var answered = Object.keys(row).filter(function (k) { return k !== "user_id" && row[k] != null; }).length;
+    if (!answered) { status.className = "status err"; status.textContent = "Please answer at least one question."; return; }
+    var btn = form.querySelector("button[type=submit]");
+    btn.disabled = true; btn.textContent = "Sending..."; status.textContent = "";
+    var r = await AFN.sb.from("feedback").insert(row);
+    btn.disabled = false; btn.textContent = "Send feedback";
+    if (r.error) { status.className = "status err"; status.textContent = "That didn't send. Please try again in a minute."; return; }
+    form.hidden = true; var t = document.getElementById("thanks"); t.hidden = false; t.focus();
+  });
+})();
+</script>
+
+<footer class="foot">
+  <div class="wrap">
+    <p>The AI Fluent Nurse. Get AI-ready, one shift at a time. <a class="link" href="/privacy.html">Privacy notice</a></p>
+    <p>For education only. Not medical, legal, or compliance advice. Always follow your employer's policies and your scope of practice.</p>
+  </div>
+</footer>
+</body>
+</html>

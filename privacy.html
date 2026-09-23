@@ -149,6 +149,7 @@ p { margin: 0; }
 .summary h2 { margin-top: 0; font-size: 1.2rem; }
 .todo { background: #fff3b0; color: #3b2f00; padding: 0 0.3rem; border-radius: 4px; font-weight: 700; }
 @media (max-width: 560px) { .tagline { display: none; } }
+.doc h3 { font-size: 1.1rem; margin-top: 1.4rem; }
 </style>
 </head>
 <body>
@@ -168,7 +169,7 @@ p { margin: 0; }
 
 <main class="doc">
   <h1>Privacy notice</h1>
-  <p class="updated">Last updated: September 20, 2026</p>
+  <p class="updated">Last updated: September 23, 2026</p>
 
   <p>The AI Fluent Nurse is run by Kim, a licensed practical nurse. This page explains what information I collect when you use this site, what I do with it, and the choices you have.</p>
 
@@ -176,7 +177,8 @@ p { margin: 0; }
     <h2>The short version</h2>
     <ul>
       <li>If you join the waitlist, I collect your name, your email, and anything you choose to tell me about your role and what you want help with.</li>
-      <li>I use it to email you about the course and to decide what to build.</li>
+      <li>If you're a student, I also keep your email, your sign-in account, which lessons you've finished, and any feedback you send.</li>
+      <li>I use it to run the course, email you about it, and decide what to build.</li>
       <li>I don't sell your information or use it for advertising.</li>
       <li>You can ask me to delete it at any time.</li>
       <li>Please never enter patient information anywhere on this site.</li>
@@ -184,34 +186,53 @@ p { margin: 0; }
   </div>
 
   <h2>What I collect</h2>
-  <p>When you join the waitlist, you give me:</p>
+  <h3>If you join the waitlist</h3>
   <ul>
     <li>Your first name, and your last name if you choose to share it</li>
     <li>Your email address</li>
     <li>Your role (LPN, CNA, RN, or other), if you choose one</li>
     <li>Anything you type in the "What do you most want help with?" box</li>
   </ul>
-  <p>Like most websites, the company that hosts this site may log basic technical details when you visit, such as your IP address and browser type. This site doesn't use advertising trackers, and I don't run analytics on it at this time. The page loads its fonts from Google Fonts, so Google may receive your IP address when the page loads.</p>
+  <h3>If you're a student</h3>
+  <ul>
+    <li>Your email address and a sign-in account, so you can get into the course. You sign in with a link sent to your email, so there's no password to store.</li>
+    <li>Whether your enrollment is active, and when it started</li>
+    <li>Which lessons you've marked as done</li>
+    <li>Anything you send through the course feedback form</li>
+    <li>Basic viewing information when you watch a lesson video, such as whether it played smoothly, how much you watched, and your device and browser type. The video service collects this so videos play well, and so I can see how lessons are used.</li>
+  </ul>
+  <p>Your knowledge check answers stay in your browser. They aren't sent to me or saved.</p>
+  <p>When you sign in, your browser stores a sign-in token so you stay signed in. It's used only for that. This site doesn't use advertising trackers or cookies for advertising.</p>
+  <p>Like most websites, the company that hosts this site may log basic technical details when you visit, such as your IP address and browser type. Pages load fonts from Google Fonts and some code from jsDelivr, a public code library, so those services may receive your IP address when a page loads.</p>
 
   <h2>Please don't share patient information</h2>
-  <p>This site is not the place for patient details. Please don't put a patient's name, dates, room number, medical record number, or anything else that could identify a patient into the waitlist form or any message to me.</p>
+  <p>This site is not the place for patient details. Please don't put a patient's name, dates, room number, medical record number, or anything else that could identify a patient into any form on this site, the feedback form, or any message to me.</p>
 
   <h2>How I use your information</h2>
   <ul>
+    <li>To give you access to the course and keep track of your progress</li>
+    <li>To send your sign-in links</li>
     <li>To email you about the course, including when it opens and updates related to it</li>
-    <li>To understand what nurses want help with, so I can build the right lessons first</li>
+    <li>To understand what's working in the lessons and what isn't, so I can improve them and build the right lessons next</li>
     <li>To reply if you contact me</li>
   </ul>
-  <p>Every email I send about the course will include a way to unsubscribe.</p>
+  <p>Every email I send about the course, other than sign-in links, will include a way to unsubscribe.</p>
 
   <h2>Who else sees it</h2>
-  <p>I don't sell your information or share it for advertising. Your information is stored with the services that run this site: Supabase, which hosts the database, and Vercel, which hosts the website. They handle it only to provide those services to me. I may also disclose information if the law requires it.</p>
+  <p>I don't sell your information or share it for advertising. Your information is handled by the services that run this site, only to provide those services to me:</p>
+  <ul>
+    <li><strong>Supabase</strong> hosts the database and handles sign-in.</li>
+    <li><strong>Vercel</strong> hosts the website.</li>
+    <li><strong>Mux</strong> hosts and plays the lesson videos, and collects the viewing information described above.</li>
+    <li><strong>Resend</strong> sends the sign-in emails.</li>
+  </ul>
+  <p>I may also disclose information if the law requires it.</p>
 
   <h2>How long I keep it</h2>
-  <p>I keep your waitlist information until you ask me to remove it, or until I no longer need the waitlist.</p>
+  <p>I keep waitlist information until you ask me to remove it, or until I no longer need the waitlist. I keep student account, progress, and feedback information while you're enrolled and for a reasonable time after, unless you ask me to delete it sooner.</p>
 
   <h2>Keeping it safe</h2>
-  <p>Your information travels over an encrypted connection and is stored in a database that only I can open. No online service can promise perfect security, but I take care to protect what you share.</p>
+  <p>Your information travels over an encrypted connection and is stored in a database with access controls, so students can see only their own account and progress. Lesson videos play only for enrolled students, using links that expire. No online service can promise perfect security, but I take care to protect what you share.</p>
 
   <h2>Your choices</h2>
   <p>You can ask me to show you, correct, or delete the information I have about you, or to take you off the list, by emailing <a href="mailto:Admin@aifluentnurse.com">Admin@aifluentnurse.com</a>. You can also use the unsubscribe link in any email I send.</p>
@@ -220,7 +241,7 @@ p { margin: 0; }
   <p>This site is for working nurses and other adults. It isn't meant for children under 13, and I don't knowingly collect their information.</p>
 
   <h2>Changes to this notice</h2>
-  <p>If I change how I handle information, for example when I add payments or student accounts, I'll update this page and the date at the top.</p>
+  <p>If I change how I handle information, for example when I add payments, I'll update this page and the date at the top.</p>
 
   <h2>Contact</h2>
   <p>Questions about this notice? Email <a href="mailto:Admin@aifluentnurse.com">Admin@aifluentnurse.com</a>.</p>
